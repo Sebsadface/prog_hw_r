@@ -1,0 +1,152 @@
+---
+title: "Final Project Climate Change"
+author: "Bowen"
+date: "11/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE, warning=FALSE}
+library("knitr")
+source("scripts/U.S_CEI_Graph.R")
+source("scripts/summary-info-table.R")
+source("scripts/monthly_climate_cond_map.R")
+source("scripts/temp_precipt_trend_graph.R")
+source("scripts/summary_info.R")
+```
+
+## Summary Information
+
+___
+### Significance
+
+Our project aims to research the effect that climate change has had on the US.
+Climate change is something important to address and understand, so we want to
+do some data analysis to determine the effect it **already has** on different 
+parts of the world and whether it has already begun to impact people's lives. We
+used **3** different data sets for our research.
+
+___
+### Introduction to Data Sets/Summary Information
+
+#### US Extreme Weather Index
+
+One of the questions that we were interested in was the *number of extreme
+weather days that the US had over the last 50 years*. To answer this, we got the
+[U.S. Climate Extremes Index (CEI)](https://www.ncdc.noaa.gov/extremes/cei/graph)
+, which has a list of the percent of extreme weather days in the United States, 
+as well as the number of actual percent of days that are extreme for the year.
+
+There are some important takeaways looking at the data. First, the data set
+traces `r cei_summary$years` years, from 1910 to 2019. In these observations,
+the year with the most days that were **above the normal temperatures** was 
+`r cei_summary$max_high_year`, with `r cei_summary$max_above_norm`% of days
+above normal. The year with the highest amount of days **below the normal
+temperatures** was `r cei_summary$max_low_year`. In total, for every
+`r cei_summary$years` of the observations, the average amount of days that were
+**extreme** (low or high) was `r cei_summary$avg_actual_percent`%.
+
+#### Monthly Climate Conditions
+
+Another question that our group was interested in was *How do the average 
+temperatures of each state in the United States today compare to the mean 
+temperatures of past 50 years or more*. To get the a data set for this, we
+went to the **Global Historical Climatology Network-Daily (GHCN-D)** for the
+[Monthly Climate Conditions](https://www.ncdc.noaa.gov/cag/divisional/mapping).
+
+The data set **above** has 7 columns for data points within the *contiguous
+United States* but we are only using the first four columns. The first and 
+second columns are a **ID** for each location, followed by the
+**Location Name**. The next column is the **date** of each occurrence, and the 
+last column is the **change in temperature** (in Fahrenheit). 
+
+#### Temperature and Precipitation Trends
+
+The last question that our group was interested in was *the trend of average
+precipitation and snowfall of each state in the United States over the last
+50 years or more* so. This could be found when we compared the **average** 
+amount of precipitation per year to each other. To do this, we got the
+[Temperature and Precipitation Trends](https://www.ncdc.noaa.gov/cag/national/time-series).
+
+This data set had three columns: the first one has the
+**date of the observation**, the next is **average precipitation for the US**
+that year, and the last column is the *anomaly*, or
+**the teperature from the average**.
+
+___
+### Summary Table
+
+##### The following table is the average change in temperature for each state:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+summary_table_df <- summary_table()
+kable(summary_table_df, col.names = c("State", "Temperature Change"))
+
+min_diff <- min(summary_table_df$change)
+max_diff <- max(summary_table_df$change)
+
+name_min <- summary_table_df %>%
+  filter(change == min(summary_table_df$change)) %>%
+  pull(state)
+
+name_max <- summary_table_df %>%
+  filter(change == max(summary_table_df$change)) %>%
+  pull(state)
+
+```
+
+This table has all the 48 states in the contiguous US, and their average change
+in temperature from the last 50 years.  We can see that the state with the least
+change was **`r name_min`** with a **`r min_diff`** increase in temperature. On the
+other hand, **`r name_max`** had a **`r max_diff`**, increase, making it the state with
+the biggest increase.
+
+___
+### Charts
+
+##### The following graph visualizes the Climate Extreme Index:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+cei_graph(cei_info)
+```
+
+This graph is intended to show the **US Climate Extreme Index** from 1920 - 2019, 
+and the relationship between the *approximation* of the percentage of extreme 
+weather days with the year. What this graph shows is that the amount of extreme 
+weather days was decreasing from 1910 to around 1963, then they began to grow up
+to where the current years have the *highest average percentage* of extreme days. 
+This difference for modern times can probably be accounted for by global warming, 
+and the pollution that the world is getting more and more of. 
+
+##### The following map shows temperature data on the contiguous US:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+monthly_climate_cond_map()
+```
+
+This is an interactive map that is intended to show the changes in temperature 
+by state. From this, we can see that there is no simple correlation between the
+state's **location** and the **change in temperature** on the state level. 
+Rather, there are sections of the map that have similar temperature changes. The
+**Southwest** has a lot of states with massive temp increases, but right next
+to it are four states that have some of the least temperature increases.
+
+##### The following graph shows trends of average temperature:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+temp_precipt_trend_graph(temp_precip_df)
+```
+
+As seen from the title, each of the recorded dates for the year happened in
+**October**. This chart is intended to show the relationship between the years
+and the average temperature of the US in October. Instead of breaking it down
+by **state**, we see the trends when they are grouped as a **nation**. From this
+data, the trend is moving upwards, and we can see how average temp is rising.
+Another interesting observation is how the anomalies also **increase in both
+directions** as the years go by. That shows that there is more variance between
+the years, showing that there are more extreme temperatures, *while* the average
+continues to climb. 
+

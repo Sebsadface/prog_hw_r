@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=JetBrains+Mono');
+@import url('https://fonts.googleapis.com/css?family=Padauk');
+a:hover {
+  color:orange;
+}
+a {
+  color:red;
+}
+nav, .navbar-default, .navbar-brand, .navbar-nav, .well {
+  font-family:'Courier New', monospace;
+  background-color:#ffffff;
+  border-color:#333;
+  color:#333 !important; /* important is necessary to override shiny! */
+}
+body, .navbar-brand {
+  font-family:'JetBrains Mono', Arial, Helvetica, sans-serif;
+}
+p {
+  font-family:'Padauk', Arial, Helvetica, sans-serif;
+  font-size:15px;
+}
+h2, h3, .navbar-brand, .navbar-brand:hover {
+  font-weight: bold;
+  font-style: italic;
+  color:#333;
+}
+

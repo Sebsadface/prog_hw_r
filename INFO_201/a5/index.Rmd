@@ -1,0 +1,95 @@
+---
+title: "Mass Shooting Data Report"
+author: "Sebastian Liu"
+date: "11/22/2020"
+output: html_document
+---
+
+```{r, include = FALSE}
+source("analysis.R")
+```
+
+### Summary Information
+
+During the year of **2018**, there were **`r number_of_shootings`** mass
+shootings occurred in **the United States**; There were **`r lives_lost`**
+people died and **`r ppl_injured`** people injured in mass shootings. Based on
+_the total number of deaths and injuries_, **`r most_impacted_city`** was 
+_most impacted city_ by shootings, while the state of **`r most_impacted_state`** 
+had _the largest total number of deaths and injuries_ among all the states. 
+_The worst two mass shootings_ happened on
+**`r most_impacted_date[1]` and `r most_impacted_date[2]`**.
+
+### Summary Table
+
+Here is a summary table of mass shootings information **by state** where 
+**20 or more people either died or injured** in mass shootings **during 2018**:
+```{r, state_info, echo = FALSE, results='asis'}
+library(knitr)
+knitr::kable(state_info[1:23, ])
+```
+According to the data, there were **`r nrow(state_info)`** states where mass
+shootings caused 20 or more people either died or injured. The worst mass 
+shootings happened in **`r state_info[1,1]`** with **`r state_info[1,2]`** 
+people lost their lives and **`r state_info[1,3]`** got injured from the 
+incidents. Two similar states in terms of mass shooting incidents are
+**`r state_info[2,1]`** and **`r state_info[3 ,1]`** with 
+**`r state_info[2,2]`** and **`r state_info[3,2]`** people either died or 
+injured from shootings. Another two states with large casualties in mass 
+shootings are **`r state_info[4,1]`** and **`r state_info[5,1]`** with 
+**`r state_info[4,2]`** and **`r state_info[5,2]`** people died from mass 
+shootings.
+
+### Description of A Particular Incident
+
+**The worst incident** of the year happened on **`r worst_incident[1,1]`**
+at **`r worst_incident[1,4]`** in **`r worst_incident[1,3]`**, 
+**`r worst_incident[1,2]`**. The exact location of the incident is 
+**(`r worst_incident[1,7]`, `r worst_incident[1,8]`)**. 
+**`r worst_incident[1,5]`** people died from the incident, which is the 
+**highest** among all the other incidents happened in the U.S. during 2018. 
+**`r worst_incident[1,6]`** got injured from the incident, and there were 
+**`r worst_incident[1,9]`** people either died or got injured from the incident.
+For more information about this incident please click 
+**[this link](https://www.nytimes.com/2018/02/14/us/parkland-school-shooting.html)**.
+
+### Interactive Map
+
+```{r, shooting_info, echo = FALSE}
+leaflet(data = shooting_info) %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  setView(lng = -100, lat = 40, zoom = 4) %>% 
+  addCircles(lat = ~lat,
+             lng = ~long,
+             stroke = FALSE,
+             popup = paste("Date: ", shooting_info$date, "<br>",
+                           "City: ", shooting_info$city, "<br>",
+                           "Death: ", shooting_info$num_killed, "<br>",
+                           "Injured: ", shooting_info$num_injured),
+             radius = 40000)
+```
+As can be seen from the map:
+
+* Most mass shooting incidents happened in east part of the U.S. and in the 
+state of California. 
+
+* Mass shooting incidents tend to happen in densely populated areas.
+
+### Plot of My Choice
+
+This graph shows the total casualties of mass shootings **by state** where 
+**60 or more people either died or injured** in mass shootings **during 2018**:
+```{r, state_plot, echo = FALSE}
+ggplotly(state_plot)
+```
+
+Point encoding was chosen because _the number of casualties can be quickly_
+_identified in this encoding_. This helped me to identify the state with
+the highest casualties in mass shootings.
+
+As can be seen from the graph:
+
+* The state of California suffered the most from mass shooting incidents.
+
+* Expect California and Texas, all the other states with casualties more than 60
+people are all in the east part of the U.S.
